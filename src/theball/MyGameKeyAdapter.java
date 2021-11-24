@@ -12,23 +12,20 @@ import java.awt.event.*;
  */
 public class MyGameKeyAdapter extends KeyAdapter {
 
-    Paddle paddle1, paddle2;
+    private Paddle paddle;
 
-    MyGameKeyAdapter(Paddle player1, Paddle player2) {
-        paddle1 = player1;
-        paddle2 = player2;
+    MyGameKeyAdapter(Paddle player) {
+        paddle = player;
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        paddle1.keyPressed(e);
-        paddle2.keyPressed(e);
+        paddle.keyPressed(e.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        paddle1.keyReleased(e);
-        paddle2.keyReleased(e);
+        paddle.keyReleased();
     }
 
 }

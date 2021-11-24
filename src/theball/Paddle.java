@@ -13,49 +13,36 @@ import java.awt.event.*;
 
 public class Paddle extends Rectangle {
 
-    int yVelocity;
-    int speed = 10;
-    int id;
+    private int yVelocity;
+    private int speed;
+    private int id;
 
-    Paddle(int x, int y, int PADDLE_WIDTH, int PADDLE_HEIGHT, int id) {
+    Paddle(int x, int y, int PADDLE_WIDTH, int PADDLE_HEIGHT, int id, int speed) {
         super(x, y, PADDLE_WIDTH, PADDLE_HEIGHT);
         this.id = id;
+        this.speed = speed;
     }
 
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(int e) {
         if (id == 1) {
-            if (e.getKeyCode() == KeyEvent.VK_Q) {
+            if (e == KeyEvent.VK_Q) {
                 setYDirection(-speed);
             }
-            if (e.getKeyCode() == KeyEvent.VK_A) {
+            if (e == KeyEvent.VK_A) {
                 setYDirection(speed);
             }
         } else {
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
+            if (e == KeyEvent.VK_UP) {
                 setYDirection(-speed);
             }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (e == KeyEvent.VK_DOWN) {
                 setYDirection(speed);
             }
         }
     }
 
-    public void keyReleased(KeyEvent e) {
-        if (id == 1) {
-            if (e.getKeyCode() == KeyEvent.VK_Q) {
-                setYDirection(0);
-            }
-            if (e.getKeyCode() == KeyEvent.VK_A) {
-                setYDirection(0);
-            }
-        } else {
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-                setYDirection(0);
-            }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                setYDirection(0);
-            }
-        }
+    public void keyReleased() {
+        setYDirection(0);
     }
 
     public void setYDirection(int yDirection) {
@@ -68,9 +55,9 @@ public class Paddle extends Rectangle {
 
     public void draw(Graphics grap) {
         if (id == 1) {
-            grap.setColor(new Color(255,255,0));
+            grap.setColor(new Color(255, 255, 0));
         } else {
-            grap.setColor(new Color(153,255,0));
+            grap.setColor(new Color(153, 255, 0));
         }
         grap.fillRect(x, y, width, height);
     }

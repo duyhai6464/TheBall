@@ -14,16 +14,18 @@ import java.lang.Math;
 
 public class Ball extends Rectangle {
 
-    private static Random random = new Random();
+    private static Random rand = new Random();
+    private int initialSpeed = 3;
     int xVelocity;
     int yVelocity;
-    int initialSpeed = 3;
 
-    Ball(int x, int y, int width, int height) {
+    Ball(int x, int y, int width, int height, int id) {
         super(x, y, width, height);
-        int rphi = random.nextInt(45, 225);
-        if (rphi >= 135) {
-            rphi += 90;
+        int rphi;
+        if (id == 1) {
+            rphi = rand.nextInt(225,315);
+        } else {
+            rphi = rand.nextInt(45, 135);
         }
         int rXDirection = (int) (Math.sin(Math.toRadians(rphi)) * initialSpeed);
         int rYDirection = (int) (Math.cos(Math.toRadians(rphi)) * initialSpeed);
