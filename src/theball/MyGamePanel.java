@@ -4,17 +4,16 @@
  */
 package theball;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.Random;
+
 /**
  *
  * @author duyha
  */
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-public class MyGamePanel extends javax.swing.JPanel implements Runnable {
+@SuppressWarnings("serial")
+public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
 
     /**
      * Creates new form MyGamePanel
@@ -23,6 +22,7 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
         initComponents();
         newPaddles();
         newBall(1);
+        newItem();
         newUIGame();
         this.setFocusable(true);
         this.setPreferredSize(SCREEN_SIZE);
@@ -35,28 +35,36 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(0, 153, 153));
+        setBackground(new java.awt.Color(0, 204, 204));
+        setForeground(new java.awt.Color(255, 102, 153));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 250, Short.MAX_VALUE));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 182, Short.MAX_VALUE));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 182, Short.MAX_VALUE)
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     static final int GAME_WIDTH = 1000;
     static final int GAME_HEIGHT = (int) (GAME_WIDTH * (0.6));
     static final int BALL_DIAMETER = 30;
+    static final int ITEM_SIZE = 20;
     static final int PADDLE_WIDTH = 25;
     static final int PADDLE_HEIGHT = 100;
-    boolean paused, botplayer1, botplayer2;
-    static final int playerspeed = 12;
-    static final int botspeed = 10;
+    static final int playerspeed = 15;
+    static final int botspeed = 12;
     static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH, GAME_HEIGHT);
+    static final Random rand = new Random();
+    private boolean paused, botplayer1, botplayer2;
+    private Item item;
     private Thread gameThread;
     private Image image;
     private Graphics graphics;
@@ -67,14 +75,15 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
 
     public void newBall(int id) {
         ball = new Ball(GAME_WIDTH / 2 - BALL_DIAMETER / 2, GAME_HEIGHT / 2 - BALL_DIAMETER / 2, BALL_DIAMETER,
-                BALL_DIAMETER,id);
+                BALL_DIAMETER, id);
     }
 
     public void newPaddles() {
         if (botplayer1) {
             paddle1 = new Paddle(0, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 1, botspeed);
         } else {
-            paddle1 = new Paddle(0, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 1, playerspeed);
+            paddle1 = new Paddle(0, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 1,
+                    playerspeed);
             this.addKeyListener(new MyGameKeyAdapter(paddle1));
         }
         if (botplayer2) {
@@ -87,8 +96,12 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
         }
     }
 
+    public void newItem() {
+        item = new Item(rand.nextInt(GAME_WIDTH / 4, 3 * GAME_WIDTH / 4 - ITEM_SIZE), rand.nextInt(GAME_HEIGHT - ITEM_SIZE), ITEM_SIZE, ITEM_SIZE);
+    }
+
     public void newUIGame() {
-        uiGame = new UIGame(GAME_WIDTH, GAME_HEIGHT);
+        uiGame = new UIGame();
     }
 
     @Override
@@ -104,6 +117,7 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
         paddle1.draw(grap);
         paddle2.draw(grap);
         ball.draw(grap);
+        item.draw(grap);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -126,9 +140,9 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
             } else {
                 dist = paddle1.getCenterY() - GAME_HEIGHT / 2;
             }
-            if (dist < -paddle1.height / 2) {
+            if (dist < -paddle1.height / 3) {
                 paddle1.keyPressed(KeyEvent.VK_A);
-            } else if (dist > paddle1.height / 2) {
+            } else if (dist > paddle1.height / 3) {
                 paddle1.keyPressed(KeyEvent.VK_Q);
             } else {
                 paddle1.keyReleased();
@@ -140,9 +154,9 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
             } else {
                 dist = paddle2.getCenterY() - GAME_HEIGHT / 2;
             }
-            if (dist < -paddle2.height / 2) {
+            if (dist < -paddle2.height / 3) {
                 paddle2.keyPressed(KeyEvent.VK_DOWN);
-            } else if (dist > paddle2.height / 2) {
+            } else if (dist > paddle2.height / 3) {
                 paddle2.keyPressed(KeyEvent.VK_UP);
             } else {
                 paddle2.keyReleased();
@@ -152,20 +166,31 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
 
     public void collisionEvent() {
         if (ball.y <= 0 || ball.y >= GAME_HEIGHT - BALL_DIAMETER) {
-            ball.setYDirection(-ball.yVelocity);
+            ball.setYDirection(-ball.getYDirection());
         }
         if (ball.intersects(paddle1) || ball.intersects(paddle2)) {
-            ball.xVelocity = Math.abs(ball.xVelocity);
-            ball.xVelocity++;
-            ball.yVelocity += (ball.yVelocity > 0 ? 1 : -1);
+            ball.addmoreSpeed();
             if (ball.intersects(paddle2)) {
-                ball.setXDirection(-ball.xVelocity);
-                paddle2.height--;
+                ball.setXDirection(-ball.getXDirection());
+                item.update(0);
+                paddle2.subPaddle();
                 uiGame.player2score++;
             } else {
-                paddle1.height--;
+                item.update(1);
+                paddle1.subPaddle();
                 uiGame.player1score++;
             }
+            if (!item.isAlive()) {
+                newItem();
+            }
+        }
+        if (!item.isHidden() && ball.intersects(item)) {
+            if (item.getId() == 1) {
+                paddle1.addPaddle();
+            } else {
+                paddle2.addPaddle();
+            }
+            newItem();
         }
         if (paddle1.y <= 0) {
             paddle1.y = 0;
@@ -183,12 +208,11 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
             if (ball.x <= 0) {
                 uiGame.player2score += 3;
                 newBall(0);
-
             } else {
                 uiGame.player1score += 3;
                 newBall(1);
             }
-            newPaddles();
+            newItem();
         }
     }
 
@@ -213,11 +237,17 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
         }
     }
 
-    public void playgame(boolean bot1player, boolean bot2player) {
+    /**
+     *
+     * @param bot1player
+     * @param bot2player
+     */
+    public void playnewgame(boolean bot1player, boolean bot2player) {
         botplayer1 = bot1player;
         botplayer2 = bot2player;
         newPaddles();
         newBall(1);
+        newItem();
         newUIGame();
         if (gameThread != null) {
             gameThread.interrupt();
@@ -232,7 +262,6 @@ public class MyGamePanel extends javax.swing.JPanel implements Runnable {
             paused = !(paused);
         }
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

@@ -9,21 +9,20 @@ package theball;
  * @author duyha
  */
 import java.awt.*;
-import java.util.*;
-import java.lang.Math;
+import static theball.MyGamePanel.rand;
 
 public class Ball extends Rectangle {
-
-    private static Random rand = new Random();
-    private int initialSpeed = 3;
-    int xVelocity;
-    int yVelocity;
+    private static final int initialSpeed = 3;
+    private static final int maxspeedX = 17;
+    private static final int maxspeedY = 16;
+    private int xVelocity;
+    private int yVelocity;
 
     Ball(int x, int y, int width, int height, int id) {
         super(x, y, width, height);
         int rphi;
         if (id == 1) {
-            rphi = rand.nextInt(225,315);
+            rphi = rand.nextInt(225, 315);
         } else {
             rphi = rand.nextInt(45, 135);
         }
@@ -40,6 +39,22 @@ public class Ball extends Rectangle {
 
     public void setYDirection(int yDirection) {
         yVelocity = yDirection;
+    }
+
+    public int getXDirection() {
+        return xVelocity;
+    }
+
+    public int getYDirection() {
+        return yVelocity;
+    }
+
+    public void addmoreSpeed() {
+        xVelocity = (Math.abs(xVelocity));
+        xVelocity = Math.min(xVelocity + 1, maxspeedX);
+        yVelocity = (yVelocity > 0 ? Math.min(yVelocity + 1, maxspeedY)
+                : Math.max(yVelocity - 1, -maxspeedY));
+//        System.out.println(xVelocity + " " + yVelocity);
     }
 
     public void update() {

@@ -12,7 +12,7 @@ import java.awt.event.*;
  */
 public class MyGameKeyAdapter extends KeyAdapter {
 
-    private Paddle paddle;
+    private final Paddle paddle;
 
     MyGameKeyAdapter(Paddle player) {
         paddle = player;

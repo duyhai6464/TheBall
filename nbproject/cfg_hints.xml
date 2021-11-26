@@ -110,5 +110,11 @@
         <node name="Javac_FINALLY">
             <attribute name="enabled" value="true"/>
         </node>
+        <node name="org.netbeans.modules.java.hints.suggestions.ConstantNameHint">
+            <attribute name="enabled" value="false"/>
+        </node>
+        <node name="org.netbeans.modules.java.hints.OverridableMethodCallInConstructor">
+            <attribute name="enabled" value="false"/>
+        </node>
     </tool>
 </configuration>

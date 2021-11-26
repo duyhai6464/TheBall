@@ -12,10 +12,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Paddle extends Rectangle {
-
+    private final static int subPaddleValue = 1;
+    private final static int addPaddleValue = 10;
     private int yVelocity;
-    private int speed;
-    private int id;
+    private final int speed;
+    private final int id;
 
     Paddle(int x, int y, int PADDLE_WIDTH, int PADDLE_HEIGHT, int id, int speed) {
         super(x, y, PADDLE_WIDTH, PADDLE_HEIGHT);
@@ -49,15 +50,23 @@ public class Paddle extends Rectangle {
         yVelocity = yDirection;
     }
 
+    public void subPaddle() {
+        this.height -= subPaddleValue;
+    }
+
+    public void addPaddle() {
+        this.height += addPaddleValue;
+    }
+
     public void update() {
-        y = y + yVelocity;
+        y += yVelocity;
     }
 
     public void draw(Graphics grap) {
         if (id == 1) {
             grap.setColor(new Color(255, 255, 0));
         } else {
-            grap.setColor(new Color(153, 255, 0));
+            grap.setColor(new Color(120, 255, 0));
         }
         grap.fillRect(x, y, width, height);
     }
