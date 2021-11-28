@@ -73,12 +73,12 @@ public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
     private Ball ball;
     private UIGame uiGame;
 
-    public void newBall(int id) {
+    private void newBall(int id) {
         ball = new Ball(GAME_WIDTH / 2 - BALL_DIAMETER / 2, GAME_HEIGHT / 2 - BALL_DIAMETER / 2, BALL_DIAMETER,
                 BALL_DIAMETER, id);
     }
 
-    public void newPaddles() {
+    private void newPaddles() {
         if (botplayer1) {
             paddle1 = new Paddle(0, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 1, botspeed);
         } else {
@@ -96,11 +96,11 @@ public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
         }
     }
 
-    public void newItem() {
+    private void newItem() {
         item = new Item(rand.nextInt(GAME_WIDTH / 4, 3 * GAME_WIDTH / 4 - ITEM_SIZE), rand.nextInt(GAME_HEIGHT - ITEM_SIZE), ITEM_SIZE, ITEM_SIZE);
     }
 
-    public void newUIGame() {
+    private void newUIGame() {
         uiGame = new UIGame();
     }
 
@@ -112,7 +112,7 @@ public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
         grap.drawImage(image, 0, 0, this);
     }
 
-    public void draw(Graphics grap) {
+    private void draw(Graphics grap) {
         uiGame.draw(grap);
         paddle1.draw(grap);
         paddle2.draw(grap);
@@ -121,7 +121,7 @@ public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
         Toolkit.getDefaultToolkit().sync();
     }
 
-    public void update() {
+    private void update() {
         paddle1.update();
         paddle2.update();
         ball.update();
@@ -132,7 +132,7 @@ public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
         }
     }
 
-    public void botUpdate() {
+    private void botUpdate() {
         double dist;
         if (botplayer1) {
             if (ball.getCenterX() < GAME_WIDTH / 2) {
@@ -164,7 +164,7 @@ public final class MyGamePanel extends javax.swing.JPanel implements Runnable {
         }
     }
 
-    public void collisionEvent() {
+    private void collisionEvent() {
         if (ball.y <= 0 || ball.y >= GAME_HEIGHT - BALL_DIAMETER) {
             ball.setYDirection(-ball.getYDirection());
         }
